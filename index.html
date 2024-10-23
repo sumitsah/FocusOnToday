@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus On Today</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <main class="container">
+        <section>
+            <h1>Focus on <span>Today</span></h1>
+            <article class="goals-card">
+                <div class="d-flex">
+                    <h2>Today</h2> <span> <img src="images/Sun.svg" alt=""> </span>
+                </div>
+                <p class="progress-label"></p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar d-flex">
+                        <span></span>
+                    </div>
+                    <p class="error-label">Please set all the 3 goals!</p>
+                </div>
+
+                <div class="goal-container">
+                    <div class="custom-checkbox">
+                        <img class="check-icon" src="./images/check-icon.svg" alt="check-icon">
+                    </div>
+                    <input class="goal-input" type="text" name="" id="first" placeholder="Add new goal..."
+                        autocomplete="off">
+                </div>
+                <div class="goal-container">
+                    <div class="custom-checkbox">
+                        <img class="check-icon" src="./images/check-icon.svg" alt="check-icon">
+                    </div>
+                    <input class="goal-input" type="text" name="" id="second" placeholder="Add new goal..."
+                        autocomplete="off">
+                </div>
+                <div class="goal-container">
+                    <div class="custom-checkbox">
+                        <img class="check-icon" src="./images/check-icon.svg" alt="check-icon">
+                    </div>
+                    <input class="goal-input" type="text" name="" id="third" placeholder="Add new goal..."
+                        autocomplete="off">
+                </div>
+
+                <p class="footer">"Move one step ahead, today"</p>
+            </article>
+        </section>
+    </main>
+</body>
+
+</html>
