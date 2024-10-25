@@ -184,6 +184,24 @@ body {
     text-decoration-line: line-through;
 }
 
+.completed .check-icon {
+    display: block;
+}
+
+.sun-container {
+    position: relative;
+}
+
+/* .sun-outer {
+    animation: rotation 3s linear infinite;
+} */
+
+.sun-face {
+    position: absolute;
+    top: 40%;
+    left: 38%
+}
+
 input[type="text"] {
     font-weight: 500;
     width: 100%;
@@ -201,6 +219,7 @@ input[type="text"] {
 
 .check-icon {
     cursor: pointer;
+    display: none;
 }
 
 .error-label {
@@ -230,8 +249,6 @@ input[type="text"] {
     border-radius: inherit;
     transition: width 0.3s ease-in-out;
     font-size: 0.7rem;
-    padding: 0 1rem;
-    opacity: 0;
 }
 
 .progress-bar span {
@@ -244,6 +261,31 @@ input[type="text"] {
     display: flex;
     gap: 2rem;
     align-items: center;
+}
+
+.remove-goal-conatiner,
+.add-goal-conatiner {
+    cursor: pointer;
+    padding: 0.5rem 1.5rem;
+    border-radius: 15px;
+    background-color: rgba(72, 163, 0, 1);
+    border: none;
+    color: white
+}
+
+.remove-goal-conatiner:hover,
+.add-goal-conatiner:hover {
+    background-color: rgba(73, 163, 0, 0.836);
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(180deg);
+    }
 }
 
 @media (max-width: 768px) {
@@ -266,7 +308,4 @@ input[type="text"] {
         margin-bottom: 1.6rem;
     }
 
-    .progress-bar span {
-        padding-left: 0;
-    }
 }

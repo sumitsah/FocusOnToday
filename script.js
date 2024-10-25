@@ -1,126 +1,195 @@
+const progressBarContainer = document.querySelector('.progress-bar-container');
+let goalContainer = document.querySelectorAll('.goal-container');
 const progressBar = document.querySelector('.progress-bar');
 const progressBarSpan = document.querySelector('.progress-bar span');
-const progressLabel = document.querySelector('.progress-label');
-const progressBarContainer = document.querySelector('.progress-bar-container');
-const goalContainer = document.querySelectorAll('.goal-container');
-const inputText1 = document.querySelector('#first');
-const inputText2 = document.querySelector('#second');
-const inputText3 = document.querySelector('#third');
+let inputFields = document.querySelectorAll('.goal-input')
+const errorLabel = document.querySelector('.error-label')
+const progressLabel = document.querySelector('.progress-label')
+const progressValue = document.querySelector('.progress-value')
+const btnContainer = document.querySelector('.button-container')
+const btnList = document.querySelectorAll('button');
+let customCheckbox = document.querySelector('.custom-checkbox')
 
-let tasksCompleted = [];
-const modifier = 33.333;
-const progressText = ['Raise the bar by completing your goals!', 'Well begun is half done!', 'Just a step away, keep going!', 'Whoa! You just completed all the goals, time for chill :D'];
+// Adding this to capture event of dynamically added element
+const goalsCard = document.querySelector('.goals-card');
+
+const allQuotes = [
+    'Raise the bar by completing your goals!',
+    'Well begun is half done!',
+    'Just a step away, keep going!',
+    'Whoa! You just completed all the goals, time for chill :D',
+    'Wow, it\'s another day',
+    'Raise the bar by completing your goals!',
+    'Well begun is half done!',
+    'Just a step away, keep going!',
+    'Whoa! You just completed all the goals, time for chill :D'
+]
+
 let allGoals = JSON.parse(localStorage.getItem('allGoals')) || {};
 
-inputText1.value = allGoals?.first?.name || ''
-inputText2.value = allGoals?.second?.name || '';
-inputText3.value = allGoals?.third?.name || '';
+createGoalContainer = (i) => {
+    const goalContainer = document.createElement('div')
+    goalContainer.classList.add('goal-container');
 
-if (allGoals?.first?.completed) {
-    goalContainer[0].classList.add('completed');
-    goalContainer[0].getElementsByClassName('check-icon')[0].src = './images/check-icon2.svg';
-    addTask();
+    const customCheckbox = document.createElement('div')
+    customCheckbox.classList.add('custom-checkbox');
+
+    const checkIconImg = document.createElement('img')
+    checkIconImg.classList.add('check-icon');
+    checkIconImg.setAttribute('src', './images/check-icon2.svg')
+    checkIconImg.setAttribute('alt', 'check-icon')
+
+    const goalInput = document.createElement('input')
+    goalInput.classList.add('goal-input');
+    goalInput.setAttribute('type', 'text')
+    goalInput.setAttribute('placeholder', 'Add new goal...')
+    goalInput.setAttribute('autocomplete', 'off')
+    goalInput.setAttribute('id', i ? Object.keys(allGoals)[i] : Date.now())
+
+    customCheckbox.append(checkIconImg)
+    goalContainer.append(customCheckbox, goalInput)
+
+    return goalContainer;
 }
 
-if (allGoals?.second?.completed) {
-    goalContainer[1].classList.add('completed');
-    goalContainer[1].getElementsByClassName('check-icon')[0].src = './images/check-icon2.svg';
-    addTask();
+updateNodes = () => {
+    let i = 0;
+    // get the allGoals keys which is not part of goalcontainer and update when refresh
+    Object.keys(allGoals).forEach(key => {
+        [...goalContainer].some(goal => { if ((goal.lastElementChild.getAttribute('id') === key)) i++; })
+    })
+
+    if (goalContainer.length < Object.keys(allGoals).length) {
+        for (let j = i; j < Object.keys(allGoals).length; j++) {
+            btnContainer.insertAdjacentElement('beforebegin', createGoalContainer(j))
+        }
+    }
 }
+updateNodes();
 
-if (allGoals?.third?.completed) {
-    goalContainer[2].classList.add('completed');
-    goalContainer[2].getElementsByClassName('check-icon')[0].src = './images/check-icon2.svg';
-    addTask();
+getCompletedGoalsCount = () => Object.values(allGoals).filter((goal) => goal.completed).length;
+
+updateProgressBar = () => {
+    inputFields = document.querySelectorAll('.goal-input')
+    progressBar.style.width = `${(getCompletedGoalsCount() / inputFields.length) * 100}%`
+    progressBar.firstElementChild.innerText = `${getCompletedGoalsCount()}/${inputFields.length} completed`
 }
+updateProgressBar();
+progressLabel.innerText = allQuotes[getCompletedGoalsCount()]
 
-progressLabel.innerText = progressText[tasksCompleted.length]
+updateInputFields = () => {
+    inputFields.forEach(input => {
+        if (allGoals[input.id]) {
+            input.value = allGoals[input.id].name
 
-for (let i = 0; i < goalContainer.length; i++) {
-    goalContainer[i].addEventListener('click', (e) => {
-        if (e.target.classList.contains('check-icon')) {
-            if (inputText1.value === '' || inputText2.value === '' || inputText3.value === '') {
-                progressBarContainer.classList.add('show-error');
-            } else {
-                progressBarContainer.classList.remove('show-error');
-            }
-            if (inputText1.value !== '' && inputText2.value !== '' && inputText3.value !== '') {
-                if (e.currentTarget.classList.contains('completed')) {
-                    e.currentTarget.classList.remove('completed');
-                    tasksCompleted.pop();
-                    const { style } = progressBar;
-                    style.width = `${modifier * tasksCompleted.length}%`;
-                    progressBarSpan.innerText = `${tasksCompleted.length}/3 completed`
-                    progressLabel.innerText = progressText[tasksCompleted.length]
-                    e.target.src = './images/check-icon.svg';
-                    if (i === 0) {
-                        allGoals.first.completed = false;
-                    } else if (i === 1) {
-                        allGoals.second.completed = false;
-                    } else {
-                        allGoals.third.completed = false;
-                    }
-                    localStorage.setItem('allGoals', JSON.stringify(allGoals))
-                    setTimeout(() => {
-                        if (tasksCompleted.length === 0) {
-                            style.opacity = 0;
-                        }
-                    }, 270);
-                } else {
-                    e.currentTarget.classList.add('completed');
-                    e.target.src = './images/check-icon2.svg';
-                    console.log(e.target)
-                    if (i === 0) {
-                        allGoals.first.completed = true;
-                    } else if (i === 1) {
-                        allGoals.second.completed = true;
-                    } else {
-                        allGoals.third.completed = true;
-                    }
-                    localStorage.setItem('allGoals', JSON.stringify(allGoals))
-                    addTask();
-                }
+            if (allGoals[input.id].completed) {
+                input.parentElement.classList.add('completed')
             }
         }
-        // if ((inputText1.value !== '' || inputText2.value !== '' || inputText3.value !== '') && progressBarContainer.classList.contains('show-error')) {
-        //     progressBarContainer.classList.remove('show-error');
-        // }
     })
 }
 
-inputText1.addEventListener('input', () => {
-    if (!allGoals?.first?.completed) {
-        allGoals = { ...allGoals, 'first': { 'name': inputText1.value, completed: false } }
-        localStorage.setItem('allGoals', JSON.stringify(allGoals))
-    } else {
-        inputText1.value = allGoals.first.name;
-    }
+updateInputFields();
+// Add or remove goal in DOM
+btnList.forEach((btn) => {
+    goalContainer = document.querySelectorAll('.goal-container');
+    btn.addEventListener('click', (e) => {
+        if (btn.id === 'addGoalContainer' && (goalContainer.length < 5)) {
+            let tempGoalContainer = createGoalContainer();
+            btnContainer.insertAdjacentElement('beforebegin', tempGoalContainer)
+            updateProgressBar();
+        }
 
+        goalContainer = document.querySelectorAll('.goal-container');
+        if (btn.id === 'removeGoalContainer' && (goalContainer.length >= 2)) {
+            goalContainer[goalContainer.length - 1].remove();
+            delete allGoals[`${goalContainer[goalContainer.length - 1].lastElementChild.getAttribute('id')}`]
+            localStorage.setItem('allGoals', JSON.stringify(allGoals));
+            updateProgressBar();
+        }
+        goalContainer = document.querySelectorAll('.goal-container');
+    })
 })
 
-inputText2.addEventListener('input', () => {
-    if (!allGoals?.second?.completed) {
-        allGoals = { ...allGoals, 'second': { 'name': inputText2.value, completed: false } }
-        localStorage.setItem('allGoals', JSON.stringify(allGoals))
-    } else {
-        inputText2.value = allGoals.second.name;
+goalsCard.addEventListener('click', (e) => {
+    if (e.target.classList.contains('custom-checkbox')) {
+        inputFields = document.querySelectorAll('.goal-input')
+        const allGoalsAdded = [...inputFields].every(function (input) {
+            return input.value
+        })
+
+        // Check if all the input goals are filled
+        if (allGoalsAdded) {
+            console.log(e.target.parentElement);
+            e.target.parentElement.classList.toggle('completed');
+            const inputId = e.target.nextElementSibling.id
+            // update  the allGoals object for completed goals true/false
+            allGoals[inputId].completed = !allGoals[inputId].completed;
+
+            // To update the progress bar and label we need to how many goals are completed by using allGoals object.
+            updateProgressBar();
+            progressLabel.innerText = allQuotes[getCompletedGoalsCount()]
+
+            // At the end update everything to localstorage
+            localStorage.setItem('allGoals', JSON.stringify(allGoals))
+        } else {
+            progressBarContainer.classList.add('show-error')
+        }
+    } else if (e.target.classList.contains('check-icon')) {
+        inputFields = document.querySelectorAll('.goal-input')
+        const allGoalsAdded = [...inputFields].every(function (input) {
+            return input.value
+        })
+
+        // Check if all the input goals are filled
+        if (allGoalsAdded) {
+            e.target.parentElement.parentElement.classList.toggle('completed');
+            const inputId = e.target.parentElement.nextElementSibling.id;
+            // update  the allGoals object for completed goals true/false
+            allGoals[inputId].completed = !allGoals[inputId].completed;
+
+            // To update the progress bar and label we need to how many goals are completed by using allGoals object.
+            updateProgressBar();
+            progressLabel.innerText = allQuotes[getCompletedGoalsCount()]
+
+            // At the end update everything to localstorage
+            localStorage.setItem('allGoals', JSON.stringify(allGoals))
+        } else {
+            progressBarContainer.classList.add('show-error')
+        }
+    }
+
+    // capture input events when typing and focusing and taking action
+    if (e.target.classList.contains('goal-input')) {
+        // On page reload update the allGoals values to DOM input fields and required class if goal is completed.
+        if (allGoals[e.target.id]) {
+            e.target.value = allGoals[e.target.id].name
+            if (allGoals[e.target.id].completed) {
+                e.target.parentElement.classList.add('completed')
+            }
+        }
+
+        e.target.addEventListener('focus', () => {
+            progressBarContainer.classList.remove('show-error')
+        })
+
+        e.target.addEventListener('input', (e) => {
+            // chech if goal input object is present and, is completed then on user input restrict updating value of input by setting everything from localstorage allGoals.
+            if (allGoals[e.target.id] && allGoals[e.target.id].completed) {
+                e.target.value = allGoals[e.target.id].name
+                return
+            }
+
+            //Add new(object) goals for object only if key(e.target.id) is not available otherwise update the already exisiting object   
+            if (allGoals[e.target.id]) {
+                allGoals[e.target.id].name = e.target.value
+            } else {
+                allGoals[e.target.id] = {
+                    name: e.target.value,
+                    completed: false,
+                }
+            }
+            localStorage.setItem('allGoals', JSON.stringify(allGoals))
+        })
     }
 })
-
-inputText3.addEventListener('input', () => {
-    if (!allGoals?.third?.completed) {
-        allGoals = { ...allGoals, 'third': { 'name': inputText3.value, completed: false } }
-        localStorage.setItem('allGoals', JSON.stringify(allGoals))
-    } else {
-        inputText3.value = allGoals.third.name;
-    }
-})
-
-function addTask() {
-    tasksCompleted.push(true);
-    const { style } = progressBar;
-    style.opacity = 1;
-    style.width = `${modifier * tasksCompleted.length}%`;
-    progressBarSpan.innerText = `${tasksCompleted.length}/3 completed`
-    progressLabel.innerText = progressText[tasksCompleted.length]
-}

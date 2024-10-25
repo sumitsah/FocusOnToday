@@ -20,36 +20,31 @@
             <h1>Focus on <span>Today</span></h1>
             <article class="goals-card">
                 <div class="d-flex">
-                    <h2>Today</h2> <span> <img src="images/Sun.svg" alt=""> </span>
+                    <h2>Today</h2> <span class="sun-container">
+                        <img class="sun-outer" src="images/sun-outer.svg" alt="">
+                        <img class="sun-face" src="images/sun-face.svg" alt="">
+                    </span>
                 </div>
                 <p class="progress-label"></p>
                 <div class="progress-bar-container">
                     <div class="progress-bar d-flex">
                         <span></span>
                     </div>
-                    <p class="error-label">Please set all the 3 goals!</p>
+                    <p class="error-label">Please set all the goals!</p>
                 </div>
 
                 <div class="goal-container">
                     <div class="custom-checkbox">
-                        <img class="check-icon" src="./images/check-icon.svg" alt="check-icon">
+                        <img class="check-icon" src="./images/check-icon2.svg" alt="check-icon">
                     </div>
-                    <input class="goal-input" type="text" name="" id="first" placeholder="Add new goal..."
-                        autocomplete="off">
+                    <input class="goal-input" type="text" id="first" placeholder="Add new goal..." autocomplete="off">
                 </div>
-                <div class="goal-container">
-                    <div class="custom-checkbox">
-                        <img class="check-icon" src="./images/check-icon.svg" alt="check-icon">
-                    </div>
-                    <input class="goal-input" type="text" name="" id="second" placeholder="Add new goal..."
-                        autocomplete="off">
-                </div>
-                <div class="goal-container">
-                    <div class="custom-checkbox">
-                        <img class="check-icon" src="./images/check-icon.svg" alt="check-icon">
-                    </div>
-                    <input class="goal-input" type="text" name="" id="third" placeholder="Add new goal..."
-                        autocomplete="off">
+
+                <div class="d-flex button-container">
+                    <button type="button" class="remove-goal-conatiner" id="removeGoalContainer" title="Remove goal"> -
+                    </button>
+                    <button type="button" class="add-goal-conatiner" id="addGoalContainer" title="Add new goal"> +
+                    </button>
                 </div>
 
                 <p class="footer">"Move one step ahead, today"</p>
